@@ -10,7 +10,7 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 19
+      nodejs: 18
     commands:
       - echo "Install phase"
       - npm install
