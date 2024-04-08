@@ -3,7 +3,7 @@ version: 0.2
 env:
   tools:
     jdk: 'jdk17'
-    nodejs: 'node19'
+    nodejs: 'node18'
   variables:
     SCANNER_HOME: 'http://54.174.176.30:9000'
 
