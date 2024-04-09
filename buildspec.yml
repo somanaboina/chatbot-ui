@@ -7,8 +7,8 @@ env:
   variables:
     SCANNER_HOME: 'http://54.174.176.30:9000'
   parameter-store: 
-    DOCKER_USER: /fbn/dev/env:DOCKER_USER
-    DOCKER_PASSWORD: /fbn/dev/env:DOCKER_PASSWORD
+    DOCKER_USER: "/fbn/dev/env"
+    DOCKER_PASSWORD: "/fbn/dev/env"
 phases:
   install:
     runtime-versions:
