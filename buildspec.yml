@@ -21,7 +21,7 @@ phases:
       - echo ">>>>>>>>>> installing sonar-scanner.........."
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
       - unzip sonar-scanner-cli-5.0.1.3006-linux.zip -d /opt
-      - mv /opt/sonar-scanner-cli-5.0.1.3006-linux /opt/sonar-scanner-cli
+      - mv /opt/sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner-cli
       - export PATH=$PATH:/opt/sonar-scanner-cli/bin/
   pre_build: 
     commands: 
