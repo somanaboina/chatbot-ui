@@ -18,9 +18,11 @@ phases:
     commands:
       - echo "Install phase"
       - npm install
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
-      - unzip sonar-scanner-cli-3.3.0.1492-linux.zip
-      - export PATH=$PATH:./sonar-scanner-3.3.0.1492-linux/bin/
+      - echo ">>>>>>>>>> installing sonar-scanner.........."
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      - unzip sonar-scanner-cli-5.0.1.3006-linux.zip /opt
+      - mv /opt/sonar-scanner-cli-5.0.1.3006-linux /opt/sonar-scanner-cli
+      - export PATH=$PATH:/opt/sonar-scanner-cli/bin/
   pre_build: 
     commands: 
       - DOCKER_USER=somanaboina
@@ -31,7 +33,7 @@ phases:
     commands:
       - echo "Build phase"
       # Perform SonarQube analysis
-      - sonar-scanner
+      - sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.host.url=http://54.227.0.225:9000 -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.projectKey=Chatbot
       #- $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
       # Perform OWASP Dependency Check
       - dependency-check --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
