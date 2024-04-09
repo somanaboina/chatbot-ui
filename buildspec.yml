@@ -9,6 +9,8 @@ env:
   parameter-store: 
     DOCKER_USER: "/fbn/dev/env"
     DOCKER_PASSWORD: "/fbn/dev/env"
+    SONARQUBE_TOKEN: "/fbn/dev/env"
+    SONARQUBE_ENDPOINT: "/fbn/dev/env"
 phases:
   install:
     runtime-versions:
@@ -16,6 +18,9 @@ phases:
     commands:
       - echo "Install phase"
       - npm install
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+      - unzip sonar-scanner-cli-3.3.0.1492-linux.zip
+      - export PATH=$PATH:./sonar-scanner-3.3.0.1492-linux/bin/
   pre_build: 
     commands: 
       - DOCKER_USER=somanaboina
@@ -26,7 +31,8 @@ phases:
     commands:
       - echo "Build phase"
       # Perform SonarQube analysis
-      - $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
+      - sonar-scanner
+      #- $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
       # Perform OWASP Dependency Check
       - dependency-check --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
       # Perform TRIVY FS SCAN
