@@ -6,7 +6,9 @@ env:
     nodejs: 'node18'
   variables:
     SCANNER_HOME: 'http://54.174.176.30:9000'
-
+  parameter-store: 
+    DOCKER_USER: /fbn/dev/env
+    DOCKER_PASSWORD: /fbn/dev/env
 phases:
   install:
     runtime-versions:
@@ -14,6 +16,10 @@ phases:
     commands:
       - echo "Install phase"
       - npm install
+  pre-build: 
+    commands: 
+      - echo Logging in to Docker Hub...
+      - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   build:
     commands:
       - echo "Build phase"
