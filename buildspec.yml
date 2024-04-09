@@ -31,10 +31,10 @@ phases:
       - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
   build:
     commands:
-      - SONARQUBE_TOKEN="squ_f77f6cec9371e71a5d5e216cd9f9b0536103030d"
+      - SONARQUBE_TOKEN="squ_68d43858e89a5aaf537a329ea5c26dbef6650bed"
       - echo "Build phase"
       # Perform SonarQube analysis
-      - sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.host.url=http://54.227.0.225:9000 -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.projectKey=Chatbot
+      - sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.host.url=http://54.227.0.225:9000 -Dsonar.login=admin -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.projectKey=Chatbot
       #- $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
       # Perform OWASP Dependency Check
       - dependency-check --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
