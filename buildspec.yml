@@ -16,7 +16,7 @@ phases:
     commands:
       - echo "Install phase"
       - npm install
-  pre-build: 
+  pre_build: 
     commands: 
       - echo Logging in to Docker Hub...
       - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
