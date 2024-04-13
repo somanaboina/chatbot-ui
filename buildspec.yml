@@ -29,12 +29,19 @@ phases:
       - DOCKER_PASSWORD=Welcome@123
       - echo Logging in to Docker Hub...
       - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
+      - echo Start code scan...
+      - sonar-scanner -Dsonar.projectKey=$SONAR_QUBE_PROJECT -Dsonar.sources=. -Dsonar.host.url=$SONAR_QUBE_URL -Dsonar.login=$SONAR_QUBE_KEY
+      - sleep 7
+      - "curl -s -u $SONAR_QUBE_KEY: $SONAR_QUBE_URL/api/qualitygates/project_status?projectKey=$SONAR_QUBE_PROJECT> /tmp/result.json"
+      - if [ $(jq -r '.projectStatus.status' /tmp/result.json) = ERROR ] ; then CODEBUILD_BUILD_SUCCEEDING=0 ; fi
+      - echo Code scan completed on `date`
+      - if [ "$CODEBUILD_BUILD_SUCCEEDING" -eq 0 ]; then exit 1; fi
   build:
     commands:
-      - SONARQUBE_TOKEN="squ_68d43858e89a5aaf537a329ea5c26dbef6650bed"
+      #- SONARQUBE_TOKEN="squ_68d43858e89a5aaf537a329ea5c26dbef6650bed"
       - echo "Build phase"
       # Perform SonarQube analysis
-      - sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.host.url=http://54.227.0.225:9000 -Dsonar.login=admin -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.projectKey=Chatbot
+      #- sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.host.url=http://54.227.0.225:9000 -Dsonar.login=admin -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.projectKey=Chatbot
       #- $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
       # Perform OWASP Dependency Check
       - dependency-check --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
