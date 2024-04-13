@@ -24,7 +24,11 @@ phases:
       - mv /opt/sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner-cli
       - export PATH=$PATH:/opt/sonar-scanner-cli/bin/
       - yum -q install -y jq
-      - yum install -y dependency-check
+      - echo "Install Dependency check"
+      - wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.0/dependency-check-7.4.0-release.zip
+      - unzip dependency-check-7.4.0-release.zip
+      - rm dependency-check-7.4.0-release.zip
+      - chmod -R 775 $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh
   pre_build: 
     commands: 
       - DOCKER_USER=somanaboina
@@ -46,7 +50,7 @@ phases:
       #- sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.host.url=http://54.227.0.225:9000 -Dsonar.login=admin -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.projectKey=Chatbot
       #- $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
       # Perform OWASP Dependency Check
-      - dependency-check --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
+      - $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
       # Perform TRIVY FS SCAN
       - trivy fs . > trivyfs.json
       # Build Docker image
