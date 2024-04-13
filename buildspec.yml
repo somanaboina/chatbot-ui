@@ -1,41 +1,23 @@
 version: 0.2
 
-env:
-  tools:
-    jdk: 'jdk17'
-    nodejs: 'node19'
-  variables:
-    SCANNER_HOME: 'http://54.174.176.30:9000'
-
 phases:
   install:
     runtime-versions:
-      nodejs: 19
+      python: 3.8
+      terraform: 1.0
+  pre_build:
     commands:
-      - echo "Install phase"
-      - npm install
+      - echo "Pre-build phase"
   build:
     commands:
       - echo "Build phase"
-      # Perform SonarQube analysis
-      - $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot -Dsonar.projectKey=Chatbot
-      # Perform OWASP Dependency Check
-      - dependency-check --scan ./ --disableYarnAudit --disableNodeAudit --format XML --out .
-      # Perform TRIVY FS SCAN
-      - trivy fs . > trivyfs.json
-      # Build Docker image
-      - docker build -t chatbot .
-      # Tag Docker image
-      - docker tag chatbot somanaboina/chatbot:latest
-  post_build:
-    commands:
-      - echo "Post-build phase"
-      # Push Docker image to Docker Hub
-      - docker push somanaboina/chatbot:latest
-      # Perform TRIVY scan on Docker image
-      - trivy image somanaboina/chatbot:latest > trivy.json
-      # Remove existing container
-      - docker stop chatbot || true
-      - docker rm chatbot || true
-      # Deploy to container
-      - docker run -d --name chatbot -p 3000:3000 somanaboina/chatbot:latest
+      - git clone --branch legacy https://github.com/Aj7Ay/chatbot-ui.git
+      - cd chatbot-ui
+      - terraform --version
+      - cd ..
+      - cd Eks-terraform
+      - terraform init
+      - terraform validate
+      - terraform plan
+      # For apply or destroy, set the action variable as 'apply' or 'destroy' before executing
+      - terraform ${action} --auto-approve
