@@ -29,6 +29,8 @@ phases:
       - unzip dependency-check-7.4.0-release.zip
       - rm dependency-check-7.4.0-release.zip
       - chmod -R 775 $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh
+      - echo "Installing trivy"
+      - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.41.0
   pre_build: 
     commands: 
       - DOCKER_USER=somanaboina
